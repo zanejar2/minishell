@@ -136,7 +136,7 @@ void	expand_variables(t_cmd_list *list, t_env *env)
 	char		*var;
 	t_cmd_list	*head;
 	t_token		*temp;
-	int			i;
+	// int			i;
 
 	head = list;
 	var = ft_malloc (100);
@@ -149,12 +149,12 @@ void	expand_variables(t_cmd_list *list, t_env *env)
 				list->token->value = var_expander(list->token->value, env);
 			else if (list->token->e_type == TOKEN_DQSTRING)
 			{
-				i = 0;
-				while (list->token->value[i])
-				{
+				// i = 0;
+				// while (list->token->value[0] && list->token->value[i])
+				// {
 					list->token->value = string_rewriter(list->token->value, env);
-					i++;
-				}
+				// 	i++;
+				// }
 				// i = 0;
 				// while (list->token->value[i] != '\0')
 				// {

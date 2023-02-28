@@ -103,13 +103,17 @@ char	*replace_var(char **tab_str, char *var)
 char	*string_rewriter(char *string, t_env *env)
 {
 	char	*str;
-	char	*var;
+	char	**var;
 	char	**tab_str;
+	char	*final; 
 	int		i;
+	int		j;
 
 	i = 0;
+	j = 0;
 	str = NULL;
 	tab_str = NULL;
+	var = ft_malloc(10 * sizeof(char **));
 	while (string[i])
 	{
 		if (string[i] == '$')
@@ -118,20 +122,39 @@ char	*string_rewriter(char *string, t_env *env)
 			while (string[i] && ft_isalnum(string[i]))
 				str = get_next_char(str, string[i++]);
 			// printf("%s\n", str);
-			var = var_expander(str, env);
-			// printf("%s\n", var);
+			var[j] = var_expander(str, env);
+			// printf("%s\n", var[j]);
+			j++;
 		}
 		else
 			while (string[i] && string[i] != '$')
 				str = get_next_char(str, string[i++]);
 		tab_str = get_next_str(tab_str, str);
-		int j = 0;
-		while (tab_str[j])
-		{
-			printf("%s\n", tab_str[j]);
-			j++;
-		}
 		str = NULL;
 	}
-	return (replace_var(tab_str, var));
+	var[j] = NULL;
+	// j = 0;
+	// while (var[j])
+	// {
+	// 	printf("var : %s\n", var[j]);
+	// 	j++;
+	// }
+	// while (tab_str[j])
+	// {
+	// 	printf("tab :%s\n", tab_str[j]);
+	// 	j++;
+	// }
+	// exit(0);
+	j = 0;
+	while (var[j])
+	{
+			// printf("var : %s\n", var[j]);
+		final = replace_var(tab_str, var[j]);
+
+	// printf("%s\n", final);
+		j++;
+	}
+	
+	// exit(0);
+	return (final);
 }
