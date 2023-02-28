@@ -134,11 +134,9 @@ char	*var_expander(char *var, t_env *env)
 void	expand_variables(t_cmd_list *list, t_env *env)
 {
 	char		*var;
-	char		*old_var;
 	t_cmd_list	*head;
 	t_token		*temp;
 	int			i;
-	int			j;
 
 	head = list;
 	var = ft_malloc (100);
@@ -152,38 +150,49 @@ void	expand_variables(t_cmd_list *list, t_env *env)
 			else if (list->token->e_type == TOKEN_DQSTRING)
 			{
 				i = 0;
+				while (list->token->value[i])
+				{
+					list->token->value = string_rewriter(list->token->value, env);
+					i++;
+				}
+				// i = 0;
 				// while (list->token->value[i] != '\0')
 				// {
 				// 	printf("%c ", list->token->value[i]);
 				// 	i++;
 				// }
 				// exit(0);
-				//printf("%c %s\n", list->token->value[i], list->token->value);
-				while (list->token->value[i] != '\0')
-				{
-					// printf("ok\n");
-					if (list->token->value[i] == '$')
-					{
-						j = 0;
-						// printf("%c\n", list->token->value[i]);
-						while (list->token->value[i] && list->token->value[i] != ' ' && list->token->value[i] != '$')
-						{
-							var[j] = list->token->value[i];
-							j++;
-							i++;
-						}
-						var[j] = '\0';
-						old_var = var;
-						// printf("%s\n", var);
-						var = var_expander(var, env);
-						// printf("%s\n", var);
-						// printf("%s\n", list->token->value);
-						list->token->value = string_rewriter(list->token->value, var, old_var);
-						// printf("%s\n", list->token->value);
-						// exit(0);
-					}
-					i++;
-				}
+				// printf("%c %s\n", list->token->value[i], list->token->value);
+				// exit(0);
+				// while (list->token->value[i])
+				// {
+				// 	if (list->token->value[i] == '$')
+				// 	{
+				// 	// printf("ok\n");
+				// 		// printf("%c\n", list->token->value[i]);
+				// 		// if (!list->token->value[i + 1])
+				// 		// 	break;
+				// 		var[0] = '$';
+				// 		j = 1;
+				// 		i++;
+				// 		while (list->token->value[i] && list->token->value[i] != ' ')
+				// 		{
+				// 			var[j] = list->token->value[i];
+				// 			j++;
+				// 			i++;
+				// 		}
+				// 		var[j] = '\0';
+				// 		var = var_expander(var, env);
+				// 		// printf("%s\n", var);
+				// 		// printf("%s\n", list->token->value);
+				// 		list->token->value = string_rewriter(list->token->value, var);
+				// 		// printf("%s\n", list->token->value);
+				// 		// exit(0);
+				// 		// printf("ok\n");
+				// 	}
+				// 	else
+				// 		i++;
+				// // }
 			}
 			list->token = list->token->next;
 		}

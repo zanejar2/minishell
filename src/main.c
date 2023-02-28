@@ -2,34 +2,34 @@
 
 void test(t_cmd_list *list)
 {
-	// int i;
+	int i;
 	while (list)
 	{
-		// i = 0;
-		while (list->token)
-		{
-			// if (list->token->e_type == TOKEN_DQSTRING)
-			// {
-				// i = 0;
-				// while (list->token->value[i] != '\0')
-				// {	
-					// printf("%c ",list->token->value[i]);
-					// i++;
-				// }
-			// }
-			printf("TOKEN %d : %s\n", list->token->e_type, list->token->value);
-			list->token = list->token->next;
-		}
+		i = 0;
+		// while (list->token)
+		// {
+		// 	// if (list->token->e_type == TOKEN_DQSTRING)
+		// 	// {
+		// 		// i = 0;
+		// 		// while (list->token->value[i] != '\0')
+		// 		// {	
+		// 			// printf("%c ",list->token->value[i]);
+		// 			// i++;
+		// 		// }
+		// 	// }
+		// 	printf("TOKEN %d : %s\n", list->token->e_type, list->token->value);
+		// 	list->token = list->token->next;
+		// }
 		// while (list->redirect)
 		// {
 		// 	printf("redirect %d : %s\n", list->redirect->type, list->redirect->ptr);
 		// 	list->redirect = list->redirect->next;
 		//  }
-		// while (list->cdm_line[i])
-		// {
-		// 	printf("cmd : %s\n", list->cdm_line[i]);
-		// 	i++;
-		// }
+		while (list->cdm_line[i])
+		{
+			printf("cmd : %s\n", list->cdm_line[i]);
+			i++;
+		}
 		// printf("in %d, out %d\n", list->in, list->out);
 		// printf("file : %s\n", list->last_file);
 		//printf("%s\n", list->redirect->ptr);

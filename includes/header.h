@@ -113,10 +113,16 @@ void		files_opener(t_cmd_list *list);
 
 void		expand_variables(t_cmd_list *list, t_env *env);
 char		*var_expander(char *var, t_env *env);
-char		*string_rewriter(char *string, char *var, char *old_var);
 
 t_env		*env_cpy_maker(char **env);
 void		env_add_back(t_env **list, t_env *node);
 t_env		*env_list_maker(char	**str);
+
+int		tdm(char **arr);
+char	**get_next_str(char **tab_str, char *str);
+char	*tab_to_str(char **tab_str);
+char	*replace_var(char **tab_str, char *var);
+char	*string_rewriter(char *string, t_env *env);
+
 
 #endif

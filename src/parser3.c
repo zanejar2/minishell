@@ -1,116 +1,137 @@
 #include "../includes/header.h"
 
-static int	ft_wordlen(char const *s, char c)
+int	tdm(char **arr)
 {
-	int	i;
+	int	a;
 
-	i = 0;
-	while (s[i] && s[i] != c)
-		i++;
-	return (i);
-}
-
-static int	ft_wordcount(char const *s, char a, char b)
-{
-	int	count;
-	int	i;
-
-	count = 0;
-	while (*s)
-	{
-		while (*s == a || *s == b)
-		{
-			s++;
-			if (*s == '\0')
-				return (count);
-		}
-		i = ft_wordlen(s, a);
-		s += i;
-		count++;
-	}
-	return (count);
-}
-
-char	**new_split(char *s, char c)
-{
-	int		count;
-	int		len;
-	int		i;
-	char	**jar;
-
-	if (!s)
+	if (arr[0] == NULL)
 		return (0);
-	count = ft_wordcount(s, c);
-	jar = (char **)malloc((count + 1) * sizeof(char *));
-	if (jar == NULL)
-		return (0);
-	i = -1;
-	while (++i < count)
-	{
-		while (*s == c)
-			s++;
-		len = ft_wordlen(s, c);
-		jar[i] = (char *)malloc((len + 1) * sizeof(char));
-		if (jar[i] == NULL)
-			return (0);
-		ft_strlcpy(jar[i], s, len + 1);
-		s += len;
-	}
-	jar[i] = 0;
-	return (jar);
+	a = 0;
+	while (arr[a] != NULL)
+		a++;
+	return (a);
 }
 
-char	*string_rewriter(char *string, char *var, char *old_var)
+char	*get_next_char(char *str, char c)
 {
 	char	*new_str;
-	char	**string_list;
 	int		i;
 
-	string_list = ft_split(string, ' ');
 	i = 0;
-	while(string_list[i])
+	if (!str)
 	{
-		if (!ft_strcmp(string_list[i], old_var))
-			string_list[i] = var;
+		str = ft_malloc (sizeof(char) * 2);
+		str[0] = c;
+		str[1] = '\0';
+		return (str);
+	}
+	new_str = ft_malloc((ft_strlen(str) + 2) * sizeof(char));
+	while (str[i])
+	{
+		new_str[i] = str[i];
 		i++;
 	}
-	// printf("%s\n", string_list[0]);
-	i = 0;
-	while (string_list[i + 1])
-	{
-		// printf("ok\n");
-		new_str = ft_strjoin(string_list[i], string_list[i + 1]);
-		i++;
-	}
-	// printf("%s\n", new_str);
+	new_str[i++] = c;
+	new_str[i] = '\0';
 	return (new_str);
 }
 
-char	**ft_split(char const *s, char c)
+char	**get_next_str(char **tab_str, char *str)
 {
-	int		count;
-	int		len;
 	int		i;
-	char	**jar;
+	char	**new_tab;
 
-	if (!s)
-		return (0);
-	count = ft_wordcount(s, c);
-	jar = (char **)malloc((count + 1) * sizeof(char *));
-	if (jar == NULL)
-		return (0);
-	i = -1;
-	while (++i < count)
+	i = 0;
+	if (!tab_str)
 	{
-		while (*s == c)
-			s++;
-		len = ft_wordlen(s, c);
-		jar[i] = (char *)malloc((len + 1) * sizeof(char));
-		if (jar[i] == NULL)
-			return (0);
-		ft_strlcpy(jar[i], s, len + 1);
-		s += len;
+		tab_str = ft_malloc(2 * sizeof(char *));
+		tab_str[0] = str;
+		tab_str[1] = NULL;
+		return (tab_str);
 	}
-	jar[i] = 0;
-	return (jar);
+	new_tab = ft_malloc((tdm(tab_str) + 2) * sizeof(char *));
+	while (tab_str[i])
+	{
+		new_tab[i] = tab_str[i];
+		i++;
+	}
+	new_tab[i++] = str;
+	new_tab[i] = NULL;
+	return (new_tab);
+}
+
+char	*tab_to_str(char **tab_str)
+{
+	char	*final_str;
+	int		i;
+
+	i = 0;
+	final_str = "";
+	while (tab_str && tab_str[i])
+	{
+		if (tab_str[i][0] != '\0')
+			final_str = ft_strjoin(final_str, tab_str[i]);
+		i++;
+	}
+	return (final_str);
+}
+
+char	*replace_var(char **tab_str, char *var)
+{
+	int		i;
+
+	i = 0;
+	while (tab_str[i])
+	{
+		if (tab_str[i][0] == '$' && var)
+		{
+			// free(tab_str[i]);
+			tab_str[i] = var;
+			break;
+		}
+		else if (tab_str[i][0] == '$' && !var)
+		{
+			// free(tab_str[i]);
+			tab_str[i] = ft_strdup("");
+			break;
+		}
+		i++;
+	}
+	return (tab_to_str(tab_str));
+}
+
+char	*string_rewriter(char *string, t_env *env)
+{
+	char	*str;
+	char	*var;
+	char	**tab_str;
+	int		i;
+
+	i = 0;
+	str = NULL;
+	tab_str = NULL;
+	while (string[i])
+	{
+		if (string[i] == '$')
+		{
+			str = get_next_char(str, string[i++]);
+			while (string[i] && ft_isalnum(string[i]))
+				str = get_next_char(str, string[i++]);
+			// printf("%s\n", str);
+			var = var_expander(str, env);
+			// printf("%s\n", var);
+		}
+		else
+			while (string[i] && string[i] != '$')
+				str = get_next_char(str, string[i++]);
+		tab_str = get_next_str(tab_str, str);
+		int j = 0;
+		while (tab_str[j])
+		{
+			printf("%s\n", tab_str[j]);
+			j++;
+		}
+		str = NULL;
+	}
+	return (replace_var(tab_str, var));
 }
