@@ -118,11 +118,10 @@ t_env		*env_cpy_maker(char **env);
 void		env_add_back(t_env **list, t_env *node);
 t_env		*env_list_maker(char	**str);
 
-int		tdm(char **arr);
-char	**get_next_str(char **tab_str, char *str);
-char	*tab_to_str(char **tab_str);
-char	*replace_var(char **tab_str, char *var);
-char	*string_rewriter(char *string, t_env *env);
-
+int			tdm(char **arr);
+char		**get_next_str(char **tab_str, char *str);
+char		*tab_to_str(char **tab_str);
+char		*replace_var(char **tab_str, char *var, char *old_var);
+char		*string_rewriter(char *string, t_env *env);
 
 #endif

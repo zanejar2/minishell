@@ -1,17 +1,5 @@
 #include "../includes/header.h"
 
-int	tdm(char **arr)
-{
-	int	a;
-
-	if (arr[0] == NULL)
-		return (0);
-	a = 0;
-	while (arr[a] != NULL)
-		a++;
-	return (a);
-}
-
 char	*get_next_char(char *str, char c)
 {
 	char	*new_str;
@@ -76,22 +64,20 @@ char	*tab_to_str(char **tab_str)
 	return (final_str);
 }
 
-char	*replace_var(char **tab_str, char *var)
+char	*replace_var(char **tab_str, char *var, char *old_var)
 {
 	int		i;
 
 	i = 0;
 	while (tab_str[i])
 	{
-		if (tab_str[i][0] == '$' && var)
+		if (!ft_strcmp(tab_str[i], old_var) && var)
 		{
-			// free(tab_str[i]);
 			tab_str[i] = var;
 			break;
 		}
-		else if (tab_str[i][0] == '$' && !var)
+		else if (!ft_strcmp(tab_str[i], old_var) && !var)
 		{
-			// free(tab_str[i]);
 			tab_str[i] = ft_strdup("");
 			break;
 		}
@@ -104,6 +90,7 @@ char	*string_rewriter(char *string, t_env *env)
 {
 	char	*str;
 	char	**var;
+	char	**old_var;
 	char	**tab_str;
 	char	*final; 
 	int		i;
@@ -113,7 +100,8 @@ char	*string_rewriter(char *string, t_env *env)
 	j = 0;
 	str = NULL;
 	tab_str = NULL;
-	var = ft_malloc(10 * sizeof(char **));
+	var = ft_malloc(100 * sizeof(char **));
+	old_var = ft_malloc(100 * sizeof(char **));
 	while (string[i])
 	{
 		if (string[i] == '$')
@@ -121,9 +109,8 @@ char	*string_rewriter(char *string, t_env *env)
 			str = get_next_char(str, string[i++]);
 			while (string[i] && ft_isalnum(string[i]))
 				str = get_next_char(str, string[i++]);
-			// printf("%s\n", str);
+			old_var[j] = str;
 			var[j] = var_expander(str, env);
-			// printf("%s\n", var[j]);
 			j++;
 		}
 		else
@@ -133,28 +120,13 @@ char	*string_rewriter(char *string, t_env *env)
 		str = NULL;
 	}
 	var[j] = NULL;
-	// j = 0;
-	// while (var[j])
-	// {
-	// 	printf("var : %s\n", var[j]);
-	// 	j++;
-	// }
-	// while (tab_str[j])
-	// {
-	// 	printf("tab :%s\n", tab_str[j]);
-	// 	j++;
-	// }
-	// exit(0);
+	old_var[j] = NULL;
 	j = 0;
+	final = string;
 	while (var[j])
 	{
-			// printf("var : %s\n", var[j]);
-		final = replace_var(tab_str, var[j]);
-
-	// printf("%s\n", final);
+		final = replace_var(tab_str, var[j], old_var[j]);
 		j++;
 	}
-	
-	// exit(0);
 	return (final);
 }

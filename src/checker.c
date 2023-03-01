@@ -72,9 +72,23 @@ int quotes_check(char *line)
 	while (line[i])
 	{
 		if (line[i] == '"')
+		{	
 			d++;
+			i++;
+			while (line[i] && line[i] != '"')
+				i++;
+			if (line[i])
+				d++;
+		}
 		else if (line[i] == '\'')
+		{	
 			s++;
+			i++;
+			while (line[i] && line[i] != '\'')
+				i++;
+			if (line[i])
+				s++;
+		}
 		i++;
 	}
 	if (d % 2 != 0 || s % 2 != 0)
@@ -84,7 +98,7 @@ int quotes_check(char *line)
 
 int line_errors_checker(char *line)
 {
-	if (quotes_check(line) == 0)
+	if (quotes_check(line) == 0) 
 	{	
 		ft_error(5);
 		return (0);

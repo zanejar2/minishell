@@ -34,7 +34,7 @@ void test(t_cmd_list *list)
 		// printf("file : %s\n", list->last_file);
 		//printf("%s\n", list->redirect->ptr);
 		// printf("size : %d\n", list->size);
-		printf("**********************\n");
+		// printf("**********************\n");
 		list = list->next;
 	}
 }
@@ -60,9 +60,9 @@ int main(int ac, char **av, char **env)
 	(void)ac;
 	(void)av;
 	// (void)env;
+	env_cpy = env_cpy_maker(env);
 	while (1)
 	{
-		env_cpy = env_cpy_maker(env);
 		line = readline("MINISHELL : ");
 		if (line_errors_checker(line) == 0)
 			continue;

@@ -51,3 +51,15 @@ t_env *env_cpy_maker(char **env)
 	return (env_cpy);
 }
 
+int	tdm(char **arr)
+{
+	int	a;
+
+	if (arr[0] == NULL)
+		return (0);
+	a = 0;
+	while (arr[a] != NULL)
+		a++;
+	return (a);
+}
+
