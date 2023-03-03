@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser2.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/03 02:58:20 by zanejar           #+#    #+#             */
+/*   Updated: 2023/03/03 07:32:19 by zanejar          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/header.h"
 
-void files_opener(t_cmd_list *list)
+void	files_opener(t_cmd_list *list)
 {
-	t_cmd_list *head;
+	t_cmd_list	*head;
 
 	head = list;
 	while (list)
@@ -12,36 +24,7 @@ void files_opener(t_cmd_list *list)
 		list->last_file = NULL;
 		while (list->redirect)
 		{
-			if (list->redirect->type == TOKEN_LREDIRECT)
-			{
-				list->in = open(list->redirect->ptr, O_RDONLY, 0666);
-				if (list->in < 0)
-				{	
-					ft_error(2);
-					break;
-				}
-				list->last_file = list->redirect->ptr;
-			}
-			else if (list->redirect->type == TOKEN_RREDIRECT)
-			{
-				list->out = open(list->redirect->ptr, O_CREAT | O_RDWR | O_TRUNC, 0666);
-				if (list->out < 0)
-				{	
-					ft_error(2);
-					break;
-				}
-				list->last_file = list->redirect->ptr;
-			}
-			else if (list->redirect->type == TOKEN_DRREDIRECT)
-			{
-				list->out = open(list->redirect->ptr, O_CREAT | O_APPEND | O_RDWR, 0666);
-				if (list->out < 0)
-				{	
-					ft_error(2);
-					break;
-				}
-				list->last_file = list->redirect->ptr;
-			}
+			real_opener(&list);
 			if (list->in != 0 && list->redirect->next != NULL)
 				close (list->in);
 			if (list->out != 1 && list->redirect->next != NULL)
@@ -53,50 +36,49 @@ void files_opener(t_cmd_list *list)
 	list = head;
 }
 
-void tokens_num(t_cmd_list *list)
+void	tokens_num(t_cmd_list *list)
 {
-    int         i;
-    t_cmd_list  *head;
-    t_token     *temp;
+	int			i;
+	t_cmd_list	*head;
+	t_token		*temp;
 
-    head = list;
-    while (list)
-    {
-        temp = list->token;
-        i = 1;
-        while (list->token)
-        {
-            i++;
-            list->token = list->token->next;
-        }
-        list->size = i;
-        list->token = temp;
-        list = list->next;
-    }
-    list = head;
+	head = list;
+	while (list)
+	{
+		temp = list->token;
+		i = 1;
+		while (list->token)
+		{
+			i++;
+			list->token = list->token->next;
+		}
+		list->size = i;
+		list->token = temp;
+		list = list->next;
+	}
+	list = head;
 }
 
-t_cmd_list *cmd_line_maker(t_cmd_list *list)
+t_cmd_list	*cmd_line_maker(t_cmd_list *list)
 {
 	t_cmd_list	*head;
-	t_token	*temp;
-	int		i;
+	t_token		*temp;
+	int			i;
 
 	head = list;
 	while (list)
 	{
 		temp = list->token;
 		i = 0;
-		list->cdm_line = malloc (sizeof(char *) * list->size);
+		list->cdm_line = ft_malloc (sizeof(char *) * list->size);
 		while (list->token)
 		{
-			if (list->token->e_type == TOKEN_ARG || list->token->e_type == TOKEN_CMD\
-			|| list->token->e_type == TOKEN_DQSTRING || list->token->e_type == TOKEN_SQSTRING\
+			if (list->token->e_type == TOKEN_ARG || \
+			list->token->e_type == TOKEN_CMD \
+			|| list->token->e_type == TOKEN_DQSTRING || \
+			list->token->e_type == TOKEN_SQSTRING \
 			||list->token->e_type == TOKEN_VAR)
-			{	
-				list->cdm_line[i] = list->token->value;
-				i++;
-			}
+				list->cdm_line[i++] = list->token->value;
 			list->token = list->token->next;
 		}
 		list->token = temp;
@@ -118,7 +100,7 @@ char	*var_expander(char *var, t_env *env)
 			var++;
 			return (var);
 		}
-		while (env && env->next)
+		while (env)
 		{
 			if (ft_strcmp(env->var, var) == 0)
 			{
@@ -128,18 +110,16 @@ char	*var_expander(char *var, t_env *env)
 			env = env->next;
 		}
 	}
-	return (ft_strdup(""));
+	return ("");
 }
 
 void	expand_variables(t_cmd_list *list, t_env *env)
 {
-	char		*var;
 	t_cmd_list	*head;
 	t_token		*temp;
 
 	head = list;
-	var = ft_malloc (100);
-	while(list)
+	while (list)
 	{
 		temp = list->token;
 		while (list->token)

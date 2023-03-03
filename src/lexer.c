@@ -1,28 +1,38 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/03 02:58:09 by zanejar           #+#    #+#             */
+/*   Updated: 2023/03/03 02:58:10 by zanejar          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/header.h"
 
-t_lexer *lexer_init(char *content)
+t_lexer	*lexer_init(char *content)
 {
-	t_lexer *lexer;
+	t_lexer	*lexer;
 
-	lexer = malloc(sizeof(t_lexer));
-	if (lexer == NULL)
-		return (0);
+	lexer = ft_malloc(sizeof(t_lexer));
 	lexer->content = content;
 	lexer->i = 0;
 	lexer->c = content[lexer->i];
 	return (lexer);
 }
 
-void lexer_advance(t_lexer *lexer)
+void	lexer_advance(t_lexer *lexer)
 {
-	if (lexer->c != '\0' && lexer->i <ft_strlen(lexer->content))
+	if (lexer->c != '\0' && lexer->i < ft_strlen(lexer->content))
 	{
 		lexer->i += 1;
 		lexer->c = lexer->content[lexer->i];
 	}
 }
 
-void lexer_skip_whitespaces(t_lexer *lexer)
+void	lexer_skip_whitespaces(t_lexer *lexer)
 {
 	while (lexer->c == ' ' || lexer->c == '\t')
 		lexer_advance(lexer);
@@ -30,7 +40,8 @@ void lexer_skip_whitespaces(t_lexer *lexer)
 
 t_token	*lexer_get_token(t_lexer *lexer)
 {
-	while (lexer->c != '\0' && lexer->i < ft_strlen(lexer->content) && lexer->c != '\n')
+	while (lexer->c != '\0' && lexer->i < ft_strlen(lexer->content) && \
+	lexer->c != '\n')
 	{
 		if (lexer->c == ' ' || lexer->c == '\t')
 			lexer_skip_whitespaces(lexer);
@@ -53,7 +64,7 @@ t_token	*lexer_get_token(t_lexer *lexer)
 	return (0);
 }
 
-t_token *lexer_advance_token(t_lexer *lexer, t_token *token)
+t_token	*lexer_advance_token(t_lexer *lexer, t_token *token)
 {
 	lexer_advance(lexer);
 	return (token);

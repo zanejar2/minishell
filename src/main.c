@@ -1,8 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/03 02:58:00 by zanejar           #+#    #+#             */
+/*   Updated: 2023/03/03 04:34:35 by zanejar          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/header.h"
 
-void test(t_cmd_list *list)
+void	test(t_cmd_list *list)
 {
-	int i;
+	t_cmd_list	*head;
+	int			i;
+	head = list;
 	while (list)
 	{
 		i = 0;
@@ -17,12 +31,14 @@ void test(t_cmd_list *list)
 		// 			// i++;
 		// 		// }
 		// 	// }
-		// 	printf("TOKEN %d : %s\n", list->token->e_type, list->token->value);
+		// 	printf("TOKEN %d : %s\n",\
+		// list->token->e_type, list->token->value);
 		// 	list->token = list->token->next;
 		// }
 		// while (list->redirect)
 		// {
-		// 	printf("redirect %d : %s\n", list->redirect->type, list->redirect->ptr);
+			// printf("redirect %d : %s\n",\
+			// list->redirect->type, list->redirect->ptr);
 		// 	list->redirect = list->redirect->next;
 		//  }
 		while (list->cdm_line[i])
@@ -30,53 +46,48 @@ void test(t_cmd_list *list)
 			printf("cmd : %s\n", list->cdm_line[i]);
 			i++;
 		}
-		// printf("in %d, out %d\n", list->in, list->out);
-		// printf("file : %s\n", list->last_file);
+		printf("in %d, out %d\n", list->in, list->out);
+		printf("file : %s\n", list->last_file);
 		//printf("%s\n", list->redirect->ptr);
 		// printf("size : %d\n", list->size);
-		// printf("**********************\n");
+		printf("**********************\n");
 		list = list->next;
 	}
+	list = head;
 }
 
-t_gb gb;
-
-void *ft_malloc(int size)
+void	*ft_malloc(int size)
 {
-	void *ptr;
+	void	*ptr;
 
 	ptr = malloc (size);
-	gb.g_c[gb.index] = ptr;
-	gb.index++;
+	g_b.g_c[g_b.index] = ptr;
+	g_b.index++;
 	return (ptr);
 }
 
-int main(int ac, char **av, char **env)
+int	main(int ac, char **av, char **env)
 {
 	char		*line;
 	t_lexer		*lexer;
 	t_cmd_list	*list;
 	t_env		*env_cpy;
+
 	(void)ac;
 	(void)av;
-	// (void)env;
 	env_cpy = env_cpy_maker(env);
 	while (1)
 	{
-		line = readline("MINISHELL : ");
+		line = readline("MYSHELL : ");
 		if (line_errors_checker(line) == 0)
-			continue;
-		if ((lexer = lexer_init(line)) == NULL)
 		{
-			ft_error(3);
-			continue;
+			free(line);
+			continue ;
 		}
+		lexer = lexer_init(line);
 		list = ft_tokenizer(lexer);
 		if (token_error_check(list) == 0)
-		{
-			ft_error(5);
-			continue;
-		}
+			continue ;
 		list = redirect_retyper(list);
 		list = ft_retokenizer(list);
 		list = redirect_list_init(list);
@@ -85,13 +96,6 @@ int main(int ac, char **av, char **env)
 		expand_variables(list, env_cpy);
 		list = cmd_line_maker(list);
 		test(list);
-		// int i = 0;
-		// while (i < 2)
-		// {
-		// 	free(gb.g_c[i]);
-		// 	printf("pointers : %s\n", gb.g_c[i]);
-		// 	i++;
-		// }
 	}
 	return (0);
 }

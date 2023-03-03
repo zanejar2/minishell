@@ -1,16 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   header.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/03 02:58:35 by zanejar           #+#    #+#             */
+/*   Updated: 2023/03/03 07:47:14 by zanejar          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef HEADER_H
-#define HEADER_H
-#include "libft.h"
-#include<fcntl.h>
-#include<readline/readline.h>
-#include<readline/history.h>
+# define HEADER_H
+# include<stdio.h>
+# include<unistd.h>
+# include<string.h>
+# include<stdlib.h>
+# include<limits.h>
+# include<fcntl.h>
+# include<readline/readline.h>
+# include<readline/history.h>
+# define SYNTAX_ERROR 5
+# define ALLOC_ERROR 3
 
-#define SYNTAX_ERROR 5
-#define ALLOC_ERROR 3
-
-typedef struct	s_token
+typedef struct s_token
 {
-	enum 
+	enum
 	{
 		TOKEN_CMD,
 		TOKEN_ARG,
@@ -23,50 +38,52 @@ typedef struct	s_token
 		TOKEN_DLREDIRECT,
 		TOKEN_DRREDIRECT,
 	}				e_type;
-	char 			*value;
+	char			*value;
 	struct s_token	*next;
 }				t_token;
 
-typedef struct	s_lexer
+typedef struct s_lexer
 {
-	char 			c;
-	char 			*content;
+	char			c;
+	char			*content;
 	unsigned int	i;
 }				t_lexer;
 
-typedef struct	s_redirect
+typedef struct s_redirect
 {
-	char	*ptr;
-	int 	type;
-	struct	s_redirect	*next;
+	char				*ptr;
+	int					type;
+	struct s_redirect	*next;
 }				t_redirect;
 
-typedef struct	s_cmd_list
+typedef struct s_cmd_list
 {
 	t_token					*token;
 	int						size;
 	char					**cdm_line;
 	t_redirect				*redirect;
 	char					*last_file;
-	int 					in;
+	int						in;
 	int						out;
 	struct s_cmd_list		*next;
-} 				t_cmd_list;
+}				t_cmd_list;
 
-typedef struct	s_env
+typedef struct s_env
 {
-	char 	*var;
-	char 	*value;
-	struct	s_env *next;
+	char			*var;
+	char			*value;
+	struct s_env	*next;
 }				t_env;
 
-typedef struct	s_gb
+typedef struct s_gb
 {
 	void	*g_c[1000000];
 	int		index;
+	int		i;
+	int		j;
 }				t_gb;
 
-
+t_gb	g_b;
 
 void		*ft_malloc(int size);
 
@@ -92,7 +109,7 @@ int			line_errors_checker(char *line);
 int			quotes_check(char *line);
 int			pipe_check(char *line);
 int			redirect_doubles_check(char *line);
-int 		redirect_files_check(t_cmd_list *list);
+int			redirect_files_check(t_cmd_list *list);
 int			token_error_check(t_cmd_list *list);
 int			cmd_cheker(t_cmd_list *list);
 
@@ -101,15 +118,18 @@ t_cmd_list	*ft_retokenizer(t_cmd_list *list);
 t_cmd_list	*redirect_retyper(t_cmd_list *list);
 t_redirect	*redirect_list_maker(t_cmd_list *list);
 t_cmd_list	*redirect_list_init(t_cmd_list *list);
+int			cond_temp(t_token	*temp);
+void		conds_temp(t_token **temp);
 
 void		token_add_back(t_token **token, t_token *new);
 t_cmd_list	*list_new(void);
 t_token		*list_last(t_token *token);
 t_redirect	*redirect_new(t_token *token);
 t_cmd_list	*cmd_line_maker(t_cmd_list *list);
-void 		tokens_num(t_cmd_list *list);
+void		tokens_num(t_cmd_list *list);
 
 void		files_opener(t_cmd_list *list);
+void		real_opener(t_cmd_list **list);
 
 void		expand_variables(t_cmd_list *list, t_env *env);
 char		*var_expander(char *var, t_env *env);
@@ -123,5 +143,18 @@ char		**get_next_str(char **tab_str, char *str);
 char		*tab_to_str(char **tab_str);
 char		*replace_var(char **tab_str, char *var, char *old_var);
 char		*string_rewriter(char *string, t_env *env);
+
+char		*ft_strdup(const char	*src);
+char		**ft_split(char const *s, char c);
+char		*ft_strjoin(char const *s1, char const *s2);
+int			ft_strcmp(char	*s1, char	*s2);
+size_t		ft_strlcat(char *dest, const char *src, size_t size);
+size_t		ft_strlen(const char *str);
+int			ft_isalnum(int x);
+int			ft_isalpha(int x);
+int			ft_isdigit(int x);
+int			ft_isprint(int x);
+size_t		ft_strlcpy(char *dest, const char *src, size_t size);
+int			ft_strncmp(const char *s1, const char *s2, size_t n);
 
 #endif

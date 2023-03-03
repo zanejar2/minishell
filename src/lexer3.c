@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer3.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/03 02:58:13 by zanejar           #+#    #+#             */
+/*   Updated: 2023/03/03 03:00:57 by zanejar          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/header.h"
 
 t_token	*lexer_collect_var(t_lexer *lexer)
@@ -5,10 +17,7 @@ t_token	*lexer_collect_var(t_lexer *lexer)
 	char	*var;
 	char	*temp;
 
-	var = malloc (1);
-	if (var == NULL)
-		ft_error(3);
-	var[0] = '\0';
+	var = ft_strdup("");
 	temp = lexer_convert_char_to_str(lexer);
 	var = ft_strjoin(var, temp);
 	lexer_advance(lexer);
@@ -23,22 +32,28 @@ t_token	*lexer_collect_var(t_lexer *lexer)
 
 t_token	*lexer_collect_pipe(t_lexer *lexer)
 {
-	char *pipe;
+	char	*pipe;
 
 	pipe = lexer_convert_char_to_str(lexer);
 	if (pipe == 0)
+	{	
 		ft_error(3);
+		return (NULL);
+	}
 	lexer_advance(lexer);
 	return (token_init(TOKEN_PIPE, pipe));
 }
 
 t_token	*lexer_collect_lredirect(t_lexer *lexer)
 {
-	char *lredirect;
+	char	*lredirect;
 
 	lredirect = lexer_convert_char_to_str(lexer);
 	if (lredirect == 0)
+	{	
 		ft_error(3);
+		return (NULL);
+	}
 	lexer_advance(lexer);
 	if (lexer->c == '<')
 	{
@@ -51,11 +66,14 @@ t_token	*lexer_collect_lredirect(t_lexer *lexer)
 
 t_token	*lexer_collect_rredirect(t_lexer *lexer)
 {
-	char *rredirect;
+	char	*rredirect;
 
 	rredirect = lexer_convert_char_to_str(lexer);
 	if (rredirect == 0)
+	{	
 		ft_error(3);
+		return (NULL);
+	}
 	lexer_advance(lexer);
 	if (lexer->c == '>')
 	{

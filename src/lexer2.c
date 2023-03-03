@@ -1,16 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer2.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/03 02:58:11 by zanejar           #+#    #+#             */
+/*   Updated: 2023/03/03 04:15:30 by zanejar          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/header.h"
 
 t_token	*lexer_collect_dqstring(t_lexer *lexer)
 {
-	char *string;
-	char *temp;
+	char	*string;
+	char	*temp;
 
 	lexer_advance(lexer);
-	string = malloc(1);
-	if (string == NULL)
-		ft_error(3);
-	string[0] = '\0';
-	while(lexer->c != '"')
+	string = ft_strdup("");
+	while (lexer->c != '"')
 	{
 		temp = lexer_convert_char_to_str(lexer);
 		string = ft_strjoin(string, temp);
@@ -22,15 +31,13 @@ t_token	*lexer_collect_dqstring(t_lexer *lexer)
 
 t_token	*lexer_collect_cmd(t_lexer *lexer)
 {
-	char *cmd;
-	char *temp;
+	char	*cmd;
+	char	*temp;
 
-	cmd = malloc(1);
-	if (cmd == NULL)
-		ft_error(3);
-	cmd[0] = '\0';
-	while(lexer->c && lexer->c != ' ' && lexer->c != '\t' && lexer->c != '<'\
-	&& lexer->c != '>' && lexer->c != '|' && lexer->c != '$')
+	cmd = ft_strdup("");
+	while (lexer->c && lexer->c != ' ' && lexer->c != '\t' && lexer->c != '<'\
+	&& lexer->c != '>' && lexer->c != '|' && lexer->c != '$' && lexer->c != '"'\
+	&& lexer->c != '\'')
 	{
 		temp = lexer_convert_char_to_str(lexer);
 		cmd = ft_strjoin(cmd, temp);
@@ -41,26 +48,22 @@ t_token	*lexer_collect_cmd(t_lexer *lexer)
 
 char	*lexer_convert_char_to_str(t_lexer *lexer)
 {
-	char *str;
-	str = malloc (2);
-	if (str == NULL)
-		return (0);
+	char	*str;
+
+	str = ft_malloc (2);
 	str[0] = lexer->c;
 	str[1] = '\0';
 	return (str);
 }
 
-t_token *lexer_collect_sqstring(t_lexer *lexer)
+t_token	*lexer_collect_sqstring(t_lexer *lexer)
 {
-	char *string;
-	char *temp;
+	char	*string;
+	char	*temp;
 
 	lexer_advance(lexer);
-	string = malloc(1);
-	if (string == NULL)
-		ft_error(3);
-	string[0] = '\0';
-	while(ft_strncmp(lexer_convert_char_to_str(lexer), "'", 1))
+	string = ft_strdup("");
+	while (ft_strcmp(lexer_convert_char_to_str(lexer), "'"))
 	{
 		temp = lexer_convert_char_to_str(lexer);
 		string = ft_strjoin(string, temp);
@@ -72,14 +75,11 @@ t_token *lexer_collect_sqstring(t_lexer *lexer)
 
 t_token	*lexer_collect_arg(t_lexer *lexer)
 {
-	char *arg;
-	char *temp;
+	char	*arg;
+	char	*temp;
 
-	arg = malloc(1);
-	if (arg == NULL)
-		ft_error(3);
-	arg[0] = '\0';
-	while(lexer->c)
+	arg = ft_strdup("");
+	while (lexer->c)
 	{
 		temp = lexer_convert_char_to_str(lexer);
 		arg = ft_strjoin(arg, temp);

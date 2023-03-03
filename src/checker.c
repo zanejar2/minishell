@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   checker.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/03 02:57:03 by zanejar           #+#    #+#             */
+/*   Updated: 2023/03/03 02:57:25 by zanejar          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/header.h"
 
 void	ft_error(int errno)
@@ -10,10 +22,10 @@ void	ft_error(int errno)
 		write(2, "File opening failure\n", 21);
 }
 
-int pipe_check(char *line)
+int	pipe_check(char *line)
 {
-	int i;
-	int flag;
+	int	i;
+	int	flag;
 
 	i = 0;
 	while (line[i])
@@ -41,9 +53,9 @@ int pipe_check(char *line)
 	return (1);
 }
 
-int redirect_doubles_check(char *line)
+int	redirect_doubles_check(char *line)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (line[i])
@@ -52,19 +64,22 @@ int redirect_doubles_check(char *line)
 			return (0);
 		else if (line[i] == '>' && line[i + 1] == '<')
 			return (0);
-		if ((line[i] == '<' || line[i] == '>') && (line[i + 1] == '<' || line[i + 1] == '>'))
-			if(line[i + 2] == '<' || line[i + 2] == '>')
+		if ((line[i] == '<' || line[i] == '>') && \
+		(line[i + 1] == '<' || line[i + 1] == '>'))
+		{	
+			if (line[i + 2] == '<' || line[i + 2] == '>')
 				return (0);
+		}
 		i++;
 	}
 	return (1);
 }
 
-int quotes_check(char *line)
+int	quotes_check(char *line)
 {
-	int i;
-	int d;
-	int s;
+	int	i;
+	int	d;
+	int	s;
 
 	i = 0;
 	d = 0;
@@ -96,15 +111,15 @@ int quotes_check(char *line)
 	return (1);
 }
 
-int line_errors_checker(char *line)
+int	line_errors_checker(char *line)
 {
-	if (quotes_check(line) == 0) 
+	if (ft_strcmp(line, "") == 0)
+		return (0);
+	if (quotes_check(line) == 0)
 	{	
 		ft_error(5);
 		return (0);
 	}
-	if (line[0] == (char)NULL)
-		return (0);
 	if (redirect_doubles_check(line) == 0)
 	{	
 		ft_error(5);

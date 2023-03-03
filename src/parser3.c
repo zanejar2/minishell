@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser3.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/03 02:58:21 by zanejar           #+#    #+#             */
+/*   Updated: 2023/03/03 09:36:13 by zanejar          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/header.h"
 
 char	*get_next_char(char *str, char c)
@@ -48,22 +60,6 @@ char	**get_next_str(char **tab_str, char *str)
 	return (new_tab);
 }
 
-char	*tab_to_str(char **tab_str)
-{
-	char	*final_str;
-	int		i;
-
-	i = 0;
-	final_str = "";
-	while (tab_str && tab_str[i])
-	{
-		if (tab_str[i][0] != '\0')
-			final_str = ft_strjoin(final_str, tab_str[i]);
-		i++;
-	}
-	return (final_str);
-}
-
 char	*replace_var(char **tab_str, char *var, char *old_var)
 {
 	int		i;
@@ -74,16 +70,45 @@ char	*replace_var(char **tab_str, char *var, char *old_var)
 		if (!ft_strcmp(tab_str[i], old_var) && var)
 		{
 			tab_str[i] = var;
-			break;
+			break ;
 		}
 		else if (!ft_strcmp(tab_str[i], old_var) && !var)
 		{
-			tab_str[i] = ft_strdup("");
-			break;
+			tab_str[i] = "";
+			break ;
 		}
 		i++;
 	}
 	return (tab_to_str(tab_str));
+}
+
+char	**inside_str_re(char *string, t_env *env, char **old_var, char **var)
+{
+	char	*str;
+	char	**tab_str;
+
+	g_b.i = 0;
+	g_b.j = 0;
+	str = NULL;
+	tab_str = NULL;
+	while (string[g_b.i])
+	{
+		if (string[g_b.i] == '$')
+		{
+			str = get_next_char(str, string[g_b.i++]);
+			while (string[g_b.i] && ft_isalnum(string[g_b.i]))
+				str = get_next_char(str, string[g_b.i++]);
+			old_var[g_b.j] = str;
+			var[g_b.j] = var_expander(str, env);
+			g_b.j++;
+		}
+		else
+			while (string[g_b.i] && string[g_b.i] != '$')
+				str = get_next_char(str, string[g_b.i++]);
+		tab_str = get_next_str(tab_str, str);
+		str = NULL;
+	}
+	return (tab_str);
 }
 
 char	*string_rewriter(char *string, t_env *env)
@@ -92,41 +117,20 @@ char	*string_rewriter(char *string, t_env *env)
 	char	**var;
 	char	**old_var;
 	char	**tab_str;
-	char	*final; 
-	int		i;
-	int		j;
+	char	*final;
 
-	i = 0;
-	j = 0;
 	str = NULL;
-	tab_str = NULL;
-	var = ft_malloc(100 * sizeof(char **));
-	old_var = ft_malloc(100 * sizeof(char **));
-	while (string[i])
-	{
-		if (string[i] == '$')
-		{
-			str = get_next_char(str, string[i++]);
-			while (string[i] && ft_isalnum(string[i]))
-				str = get_next_char(str, string[i++]);
-			old_var[j] = str;
-			var[j] = var_expander(str, env);
-			j++;
-		}
-		else
-			while (string[i] && string[i] != '$')
-				str = get_next_char(str, string[i++]);
-		tab_str = get_next_str(tab_str, str);
-		str = NULL;
-	}
-	var[j] = NULL;
-	old_var[j] = NULL;
-	j = 0;
+	var = ft_malloc((ft_strlen(string) + 1) * sizeof(char *));
+	old_var = ft_malloc((ft_strlen(string) + 1) * sizeof(char *));
+	tab_str = inside_str_re(string, env, old_var, var);
+	var[g_b.j] = NULL;
+	old_var[g_b.j] = NULL;
+	g_b.j = 0;
 	final = string;
-	while (var[j])
+	while (var[g_b.j])
 	{
-		final = replace_var(tab_str, var[j], old_var[j]);
-		j++;
+		final = replace_var(tab_str, var[g_b.j], old_var[g_b.j]);
+		g_b.j++;
 	}
 	return (final);
 }

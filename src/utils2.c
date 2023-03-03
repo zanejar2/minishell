@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils2.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/03 02:58:25 by zanejar           #+#    #+#             */
+/*   Updated: 2023/03/03 09:35:58 by zanejar          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/header.h"
 
 t_env	*env_list_maker(char	**str)
 {
-	t_env *env;
+	t_env	*env;
 
 	env = ft_malloc (sizeof(t_env));
 	env->var = str[0];
@@ -19,7 +31,7 @@ void	env_add_back(t_env **list, t_env *node)
 	if (head == NULL)
 	{
 		*list = node;
-		return;
+		return ;
 	}
 	while (head->next)
 		head = head->next;
@@ -27,7 +39,7 @@ void	env_add_back(t_env **list, t_env *node)
 	node->next = NULL;
 }
 
-t_env *env_cpy_maker(char **env)
+t_env	*env_cpy_maker(char **env)
 {
 	t_env	*env_cpy;
 	char	**tmp;
@@ -63,3 +75,18 @@ int	tdm(char **arr)
 	return (a);
 }
 
+char	*tab_to_str(char **tab_str)
+{
+	char	*final_str;
+	int		i;
+
+	i = 0;
+	final_str = ft_strdup("");
+	while (tab_str && tab_str[i])
+	{
+		if (tab_str[i][0] != '\0')
+			final_str = ft_strjoin(final_str, tab_str[i]);
+		i++;
+	}
+	return (final_str);
+}
