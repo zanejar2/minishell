@@ -6,49 +6,37 @@
 /*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 02:57:03 by zanejar           #+#    #+#             */
-/*   Updated: 2023/03/03 02:57:25 by zanejar          ###   ########.fr       */
+/*   Updated: 2023/03/05 00:29:26 by zanejar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/header.h"
 
-void	ft_error(int errno)
-{
-	if (errno == 5)
-		write(2, "Syntax error\n", 14);
-	else if (errno == 3)
-		write(2, "Allocation error\n", 18);
-	else if (errno == 2)
-		write(2, "File opening failure\n", 21);
-}
-
 int	pipe_check(char *line)
 {
-	int	i;
-	int	flag;
-
-	i = 0;
-	while (line[i])
+	g_b.i = 0;
+	while (line[g_b.i])
 	{
-		flag = 0;
+		g_b.flag = 0;
 		if (line[0] == '|')
 			return (0);
-		if (line[i] == '|')
+		if (line[g_b.i] == '|')
 		{	
-			i++;
-			if (line[i] == '\0')
+			g_b.i++;
+			if (line[g_b.i] == '\0')
 				return (0);
-			while (line[i] && line[i] != '|')
+			while (line[g_b.i] && line[g_b.i] != '|')
 			{	
-				if (ft_isprint(line[i]) && line[i] != ' ' && line[i] != '\t')
-					flag = 1;
-				i++;
+				if (ft_isprint(line[g_b.i]) && line[g_b.i] != ' ' && \
+				line[g_b.i] != '\t')
+					g_b.flag = 1;
+				g_b.i++;
 			}
-			i--;
-			if (flag == 0)
+			g_b.i--;
+			if (g_b.flag == 0)
 				return (0);
 		}
-		i++;
+		g_b.i++;
 	}
 	return (1);
 }
@@ -75,15 +63,16 @@ int	redirect_doubles_check(char *line)
 	return (1);
 }
 
-int	quotes_check(char *line)
+int	vars_init(char *line)
 {
-	int	i;
-	int	d;
-	int	s;
+	g_b.i = 0;
+	g_b.d = 0;
+	g_b.s = 0;
+	return (quotes_check(line, g_b.i, g_b.d, g_b.s));
+}
 
-	i = 0;
-	d = 0;
-	s = 0;
+int	quotes_check(char *line, int i, int d, int s)
+{
 	while (line[i])
 	{
 		if (line[i] == '"')
@@ -115,19 +104,19 @@ int	line_errors_checker(char *line)
 {
 	if (ft_strcmp(line, "") == 0)
 		return (0);
-	if (quotes_check(line) == 0)
+	if (vars_init(line) == 0)
 	{	
-		ft_error(5);
+		ft_error(SYNTAX_ERROR);
 		return (0);
 	}
 	if (redirect_doubles_check(line) == 0)
 	{	
-		ft_error(5);
+		ft_error(SYNTAX_ERROR);
 		return (0);
 	}
 	if (pipe_check(line) == 0)
 	{
-		ft_error(5);
+		ft_error(SYNTAX_ERROR);
 		return (0);
 	}
 	return (1);

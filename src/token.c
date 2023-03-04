@@ -6,7 +6,7 @@
 /*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 02:58:23 by zanejar           #+#    #+#             */
-/*   Updated: 2023/03/03 07:46:21 by zanejar          ###   ########.fr       */
+/*   Updated: 2023/03/04 02:37:14 by zanejar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,11 @@ void	more_opener1(t_cmd_list **list)
 	(*list)->in = open((*list)->redirect->ptr, O_RDONLY, 0666);
 	if ((*list)->in < 0)
 	{	
-		ft_error(2);
+		ft_error(FILE_OPENING_ERROR);
 		return ;
 	}
 	(*list)->last_file = (*list)->redirect->ptr;
+	(*list)->lst_fl_type = TOKEN_LREDIRECT;
 }
 
 void	more_opener2(t_cmd_list **list)
@@ -40,10 +41,11 @@ void	more_opener2(t_cmd_list **list)
 	O_CREAT | O_RDWR | O_TRUNC, 0666);
 	if ((*list)->out < 0)
 	{	
-		ft_error(2);
+		ft_error(FILE_OPENING_ERROR);
 		return ;
 	}
 	(*list)->last_file = (*list)->redirect->ptr;
+	(*list)->lst_fl_type = TOKEN_RREDIRECT;
 }
 
 void	more_opener3(t_cmd_list **list)
@@ -52,10 +54,11 @@ void	more_opener3(t_cmd_list **list)
 	O_CREAT | O_APPEND | O_RDWR, 0666);
 	if ((*list)->out < 0)
 	{
-		ft_error(2);
+		ft_error(FILE_OPENING_ERROR);
 		return ;
 	}
 	(*list)->last_file = (*list)->redirect->ptr;
+	(*list)->lst_fl_type = TOKEN_DRREDIRECT;
 }
 
 void	real_opener(t_cmd_list **list)

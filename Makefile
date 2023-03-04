@@ -6,7 +6,7 @@
 #    By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/16 22:41:40 by zanejar           #+#    #+#              #
-#    Updated: 2023/03/03 04:35:51 by zanejar          ###   ########.fr        #
+#    Updated: 2023/03/05 00:18:24 by zanejar          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g3
+CFLAGS = -Wall -Wextra -Werror #-fsanitize=address -g3
 
 SOURCE = src/main.c src/lexer.c src/lexer2.c src/token.c src/lexer3.c \
 		src/checker.c src/checker2.c src/parser.c src/parser2.c \

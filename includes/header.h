@@ -6,7 +6,7 @@
 /*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 02:58:35 by zanejar           #+#    #+#             */
-/*   Updated: 2023/03/03 07:47:14 by zanejar          ###   ########.fr       */
+/*   Updated: 2023/03/05 00:28:20 by zanejar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include<readline/readline.h>
 # include<readline/history.h>
 # define SYNTAX_ERROR 5
-# define ALLOC_ERROR 3
+# define FILE_OPENING_ERROR 2
 
 typedef struct s_token
 {
@@ -63,6 +63,7 @@ typedef struct s_cmd_list
 	char					**cdm_line;
 	t_redirect				*redirect;
 	char					*last_file;
+	char					lst_fl_type;
 	int						in;
 	int						out;
 	struct s_cmd_list		*next;
@@ -81,6 +82,9 @@ typedef struct s_gb
 	int		index;
 	int		i;
 	int		j;
+	int		flag;
+	int		d;
+	int		s;
 }				t_gb;
 
 t_gb	g_b;
@@ -106,7 +110,8 @@ t_token		*lexer_collect_arg(t_lexer *lexer);
 
 void		ft_error(int errno);
 int			line_errors_checker(char *line);
-int			quotes_check(char *line);
+int			quotes_check(char *line, int i, int d, int s);
+int			vars_init(char *line);
 int			pipe_check(char *line);
 int			redirect_doubles_check(char *line);
 int			redirect_files_check(t_cmd_list *list);

@@ -6,7 +6,7 @@
 /*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 02:58:00 by zanejar           #+#    #+#             */
-/*   Updated: 2023/03/03 04:34:35 by zanejar          ###   ########.fr       */
+/*   Updated: 2023/03/05 00:29:31 by zanejar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,14 @@ void	test(t_cmd_list *list)
 		// {
 		// 	// if (list->token->e_type == TOKEN_DQSTRING)
 		// 	// {
-		// 		// i = 0;
-		// 		// while (list->token->value[i] != '\0')
-		// 		// {	
-		// 			// printf("%c ",list->token->value[i]);
-		// 			// i++;
-		// 		// }
+		// 	// 	i = 0;
+		// 	// 	while (list->token->value[i] != '\0')
+		// 	// 	{	
+		// 	// 		printf("%c ",list->token->value[i]);
+		// 	// 		i++;
+		// 	// 	}
 		// 	// }
-		// 	printf("TOKEN %d : %s\n",\
-		// list->token->e_type, list->token->value);
+		// 	printf("TOKEN %d : %s\n", list->token->e_type, list->token->value);
 		// 	list->token = list->token->next;
 		// }
 		// while (list->redirect)
@@ -47,13 +46,20 @@ void	test(t_cmd_list *list)
 			i++;
 		}
 		printf("in %d, out %d\n", list->in, list->out);
-		printf("file : %s\n", list->last_file);
-		//printf("%s\n", list->redirect->ptr);
-		// printf("size : %d\n", list->size);
+		printf("file : %s, type : %d\n", list->last_file, list->lst_fl_type);
+		// // printf("size : %d\n", list->size);
 		printf("**********************\n");
 		list = list->next;
 	}
 	list = head;
+}
+
+void	ft_error(int errno)
+{
+	if (errno == 5)
+		write(2, "Syntax error\n", 14);
+	else if (errno == 2)
+		write(2, "File opening failure\n", 21);
 }
 
 void	*ft_malloc(int size)

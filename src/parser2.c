@@ -6,7 +6,7 @@
 /*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 02:58:20 by zanejar           #+#    #+#             */
-/*   Updated: 2023/03/03 07:32:19 by zanejar          ###   ########.fr       */
+/*   Updated: 2023/03/04 02:42:04 by zanejar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	files_opener(t_cmd_list *list)
 		list->in = 0;
 		list->out = 1;
 		list->last_file = NULL;
+		list->lst_fl_type = -1;
 		while (list->redirect)
 		{
 			real_opener(&list);

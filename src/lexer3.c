@@ -6,7 +6,7 @@
 /*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 02:58:13 by zanejar           #+#    #+#             */
-/*   Updated: 2023/03/03 03:00:57 by zanejar          ###   ########.fr       */
+/*   Updated: 2023/03/04 03:07:13 by zanejar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_token	*lexer_collect_var(t_lexer *lexer)
 	temp = lexer_convert_char_to_str(lexer);
 	var = ft_strjoin(var, temp);
 	lexer_advance(lexer);
-	while ((ft_isalnum(lexer->c) || lexer->c == '_') && lexer->c != '$')
+	while ((ft_isalnum(lexer->c) || lexer->c == '_') || lexer->c == '$')
 	{
 		temp = lexer_convert_char_to_str(lexer);
 		var = ft_strjoin(var, temp);
