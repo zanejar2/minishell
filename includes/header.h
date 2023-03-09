@@ -6,7 +6,7 @@
 /*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 02:58:35 by zanejar           #+#    #+#             */
-/*   Updated: 2023/03/05 00:28:20 by zanejar          ###   ########.fr       */
+/*   Updated: 2023/03/09 01:12:57 by zanejar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,13 +78,16 @@ typedef struct s_env
 
 typedef struct s_gb
 {
-	void	*g_c[1000000];
-	int		index;
-	int		i;
-	int		j;
-	int		flag;
-	int		d;
-	int		s;
+	void		*g_c[1000000];
+	int			index;
+	int			i;
+	int			j;
+	int			flag;
+	int			d;
+	int			s;
+	t_cmd_list	*head;
+	t_token		*temp;
+	char		*exp;
 }				t_gb;
 
 t_gb	g_b;
@@ -130,7 +133,7 @@ void		token_add_back(t_token **token, t_token *new);
 t_cmd_list	*list_new(void);
 t_token		*list_last(t_token *token);
 t_redirect	*redirect_new(t_token *token);
-t_cmd_list	*cmd_line_maker(t_cmd_list *list);
+void		cmd_line_maker(t_cmd_list *list);
 void		tokens_num(t_cmd_list *list);
 
 void		files_opener(t_cmd_list *list);

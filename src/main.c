@@ -6,7 +6,7 @@
 /*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 02:58:00 by zanejar           #+#    #+#             */
-/*   Updated: 2023/03/05 00:29:31 by zanejar          ###   ########.fr       */
+/*   Updated: 2023/03/09 01:13:12 by zanejar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ int	main(int ac, char **av, char **env)
 			free(line);
 			continue ;
 		}
+		add_history(line);
 		lexer = lexer_init(line);
 		list = ft_tokenizer(lexer);
 		if (token_error_check(list) == 0)
@@ -100,7 +101,7 @@ int	main(int ac, char **av, char **env)
 		files_opener(list);
 		tokens_num(list);
 		expand_variables(list, env_cpy);
-		list = cmd_line_maker(list);
+		cmd_line_maker(list);
 		test(list);
 	}
 	return (0);

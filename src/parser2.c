@@ -6,7 +6,7 @@
 /*   By: zanejar <zanejar@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 02:58:20 by zanejar           #+#    #+#             */
-/*   Updated: 2023/03/04 02:42:04 by zanejar          ###   ########.fr       */
+/*   Updated: 2023/03/09 01:12:41 by zanejar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,33 +60,55 @@ void	tokens_num(t_cmd_list *list)
 	list = head;
 }
 
-t_cmd_list	*cmd_line_maker(t_cmd_list *list)
+int	quotes_finder(char *str)
 {
-	t_cmd_list	*head;
-	t_token		*temp;
-	int			i;
+	int	i;
 
-	head = list;
+	i = 0;
+	while (str[i + 1])
+		i++;
+	if (str[i] == '=')
+		return (1);
+	return (0);
+}
+
+int	export_norm(t_token *token)
+{
+	if (ft_strcmp(token->value, "export") == 0 \
+	&& token->next && token->next->next \
+	&& token->next->next->e_type == 2 \
+	&& quotes_finder(token->next->value))
+		return (1);
+	return (0);
+}
+
+void	cmd_line_maker(t_cmd_list *list)
+{
+	g_b.head = list;
 	while (list)
 	{
-		temp = list->token;
-		i = 0;
+		g_b.temp = list->token;
+		g_b.i = 0;
 		list->cdm_line = ft_malloc (sizeof(char *) * list->size);
-		while (list->token)
+		while (g_b.temp)
 		{
-			if (list->token->e_type == TOKEN_ARG || \
-			list->token->e_type == TOKEN_CMD \
-			|| list->token->e_type == TOKEN_DQSTRING || \
-			list->token->e_type == TOKEN_SQSTRING \
-			||list->token->e_type == TOKEN_VAR)
-				list->cdm_line[i++] = list->token->value;
-			list->token = list->token->next;
+			g_b.exp = NULL;
+			if (g_b.temp->e_type >= 0 && g_b.temp->e_type <= 4)
+			{
+				list->cdm_line[g_b.i++] = g_b.temp->value;
+				if (export_norm(g_b.temp))
+				{
+g_b.exp = ft_strjoin(g_b.temp->next->value, g_b.temp->next->next->value);
+					g_b.temp = g_b.temp->next;
+				}
+			}
+			g_b.temp = g_b.temp->next;
+			if (g_b.exp != NULL && g_b.temp)
+				g_b.temp->value = g_b.exp;
 		}
-		list->token = temp;
-		list->cdm_line[i] = NULL;
+		list->cdm_line[g_b.i] = NULL;
 		list = list->next;
 	}
-	return (head);
 }
 
 char	*var_expander(char *var, t_env *env)
